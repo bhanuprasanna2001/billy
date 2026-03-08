@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install ruff
+      - run: ruff check src/ tests/ scripts/
+      - run: ruff format --check src/ tests/ scripts/
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      postgres:
+        image: postgres:17.9
+        env:
+          POSTGRES_DB: credit_domino
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: dev
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U dev -d credit_domino"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -e ".[dev]"
+      - run: pytest tests/ -v --tb=short
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: "5433"
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: dev
+          POSTGRES_DB: credit_domino
+
+  dbt:
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      postgres:
+        image: postgres:17.9
+        env:
+          POSTGRES_DB: credit_domino
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: dev
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U dev -d credit_domino"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install dbt-core==1.11.7 dbt-postgres==1.10.0
+      - run: dbt compile --profiles-dir dbt --project-dir dbt
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: "5433"
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [test, dbt]
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t credit-domino-api:ci .

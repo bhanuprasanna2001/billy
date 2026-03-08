@@ -1,0 +1,14 @@
+credit_domino:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      # Host-side port is 5433; Docker internal override sets POSTGRES_PORT=5432
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('POSTGRES_PORT', '5433') | int }}"
+      user: "{{ env_var('POSTGRES_USER', 'dev') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', 'dev') }}"
+      dbname: "{{ env_var('POSTGRES_DB', 'credit_domino') }}"
+      schema: public
+      threads: 4
+      keepalives_idle: 0
