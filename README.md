@@ -72,7 +72,7 @@ flowchart TB
         A5 --> A6[Train XGBoost]
         A6 --> A7[Evaluate Model]
         A7 --> A8{AUC ≥ 0.72?}
-        A8 -->|Yes| A9[Register @champion]
+        A8 -->|Yes| A9[Register champion]
         A8 -->|No| A10[Skip]
         A7 --> A11[Drift Check]
         A7 --> A12[Push Metrics]
@@ -86,7 +86,7 @@ flowchart TB
     end
 
     subgraph ML["ML Layer"]
-        M1[XGBoost 3.2\n1500 trees · 29 features] --> M2[MLflow 3.10\nExperiment Registry\n@champion alias]
+        M1[XGBoost 3.2\n1500 trees · 29 features] --> M2[MLflow 3.10\nExperiment Registry\nchampion alias]
         M1 --> M3[SHAP TreeExplainer\nPer-request top-5]
     end
 
@@ -106,7 +106,7 @@ flowchart TB
     S1 -.->|dual-write| D2
     S1 -.->|dual-write| D5
     D3 -.->|graph features| S1
-    M2 -.->|@champion model| S1
+    M2 -.->|champion model| S1
     O3 -.->|drift gauges| O1
 
     style ORCHESTRATION fill:#1a1a2e,stroke:#e94560,color:#fff
