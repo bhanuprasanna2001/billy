@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: "3.13"
       - run: pip install -e ".[dev]"
-      - run: pytest tests/ -v --tb=short
+      - run: pytest tests/ -v --tb=short --ignore=tests/dbt
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: "5433"
@@ -76,6 +76,14 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: "5433"
+      - run: pip install -e ".[dev]"
+      - run: pytest tests/dbt/ -v --tb=short
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: "5433"
+          POSTGRES_USER: dev
+          POSTGRES_PASSWORD: dev
+          POSTGRES_DB: credit_domino
 
   docker:
     runs-on: ubuntu-latest

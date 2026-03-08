@@ -63,7 +63,7 @@ Traditional credit models treat applicants as independent. In reality, defaults 
 
 ```mermaid
 flowchart TB
-    subgraph ORCHESTRATION["Airflow 3.1 — Orchestration"]
+    subgraph ORCHESTRATION["⚙️  Orchestration — Airflow 3.1"]
         A1[Load Data] --> A2[Neo4j Load]
         A1 --> A3[ClickHouse Init]
         A2 --> A4[Compute Graph Features]
@@ -78,23 +78,23 @@ flowchart TB
         A7 --> A12[Push Metrics]
     end
 
-    subgraph DATA["Data Layer"]
+    subgraph DATA["🗄️  Data Layer"]
         D1[(Prosper P2P\n89K nodes · 3.4M edges)] --> D2[(PostgreSQL 17.9\nOLTP Store)]
         D2 --> D3[(Neo4j + GDS\nGraph DB)]
         D2 --> D4[dbt 1.11\n3 staging + 2 marts]
         D5[(ClickHouse 26.2\nOLAP Store)]
     end
 
-    subgraph ML["ML Layer"]
+    subgraph ML["🤖  ML Layer"]
         M1[XGBoost 3.2\n1500 trees · 29 features] --> M2[MLflow 3.10\nExperiment Registry\nchampion alias]
         M1 --> M3[SHAP TreeExplainer\nPer-request top-5]
     end
 
-    subgraph SERVING["Serving Layer"]
+    subgraph SERVING["🚀  Serving Layer"]
         S1[FastAPI\n/score · /simulate-domino\nDual-write · Prometheus] --> S2[Streamlit 1.55\nScoring · Cascade Viz · Analytics]
     end
 
-    subgraph MONITORING["Monitoring Layer"]
+    subgraph MONITORING["📊  Monitoring Layer"]
         O1[Prometheus 3.10\nScrape /metrics 15s] --> O2[Grafana 12.3\n8-panel dashboard]
         O3[Evidently 0.7\nKS-test drift detection] --> O1
     end
@@ -109,11 +109,11 @@ flowchart TB
     M2 -.->|champion model| S1
     O3 -.->|drift gauges| O1
 
-    style ORCHESTRATION fill:#1a1a2e,stroke:#e94560,color:#fff
-    style DATA fill:#16213e,stroke:#0f3460,color:#fff
-    style ML fill:#1a1a2e,stroke:#e94560,color:#fff
-    style SERVING fill:#0f3460,stroke:#53a8b6,color:#fff
-    style MONITORING fill:#16213e,stroke:#0f3460,color:#fff
+    style ORCHESTRATION fill:#fff8f0,stroke:#f97316,stroke-width:2px,color:#1a1a1a
+    style DATA fill:#f0f9ff,stroke:#0ea5e9,stroke-width:2px,color:#1a1a1a
+    style ML fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#1a1a1a
+    style SERVING fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#1a1a1a
+    style MONITORING fill:#fff1f2,stroke:#f43f5e,stroke-width:2px,color:#1a1a1a
 ```
 
 All 9 services start with a single `docker compose up -d` and self-configure: Grafana dashboards are auto-provisioned, ClickHouse materialized views are created by the DAG, and the API hot-reloads the champion model on promotion.
