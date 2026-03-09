@@ -1,9 +1,9 @@
 <p align="center">
   <h1 align="center">Billy - Credit Domino</h1>
   <p align="center">
-    <strong>End-to-end credit risk scoring with graph-based contagion simulation</strong>
+    <strong>Production-style credit risk scoring and contagion simulation on the real Prosper lending network</strong>
     <br />
-    <em>From a 89K-node lending network to production-grade ML serving in 9 containers</em>
+    <em>Semi-synthetic graph-credit benchmark built with XGBoost, Neo4j, MLflow, Airflow, dbt, FastAPI, ClickHouse, Prometheus, and Grafana</em>
   </p>
   <p align="center">
     <img src="https://img.shields.io/badge/python-3.13-blue?logo=python&logoColor=white" alt="Python 3.13" />
